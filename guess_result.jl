@@ -107,9 +107,4 @@ function run_test_suite()
 
 end
 
-# If this file is called as main file, run the test suite
-if abspath(PROGRAM_FILE) == @__FILE__
-    run_test_suite()
-end
-
 end

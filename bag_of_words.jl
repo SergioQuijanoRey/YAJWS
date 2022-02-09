@@ -34,11 +34,31 @@ function load_dataset() ::BagOfWords
 
     # Iterate over our dataset
     for row in eachrow(df)
-        curr_word = Word(row["palabra"], row[" frecuencia normalizada"])
+        # Get the data from the file
+        content = row["palabra"]
+        frequency = row[" frecuencia normalizada"]
+
+        # Sanitize the content of the word
+        content = strip(content)
+
+        # Add the word
+        curr_word = Word(content, frequency)
         push!(words, curr_word)
     end
 
-    return BagOfWords(words)
+    # We only want the words that have certain length, specified in the global parameters file
+    first_bag = BagOfWords(words)
+    filtered_bag = only_words_with_given_length(first_bag)
+    return filtered_bag
+end
+
+"""
+Removes all the words that haven't got the game length
+This length is specified in the global parameters
+"""
+function only_words_with_given_length(bag::BagOfWords) ::BagOfWords
+    new_words = filter(word -> length(word.content) == WORD_LEN, bag.words)
+    return BagOfWords(new_words)
 end
 
 """
@@ -93,10 +113,6 @@ function normalized_frequencies_sum_up_one()
     bag = load_dataset()
     norm_bag = normalize_frequencies(bag)
     @test get_sum_of_frequencies(norm_bag) ≈ 1.0 atol = 0.001
-end
-
-if abspath(PROGRAM_FILE) == @__FILE__
-    run_test_suite()
 end
 
 end
