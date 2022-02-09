@@ -24,7 +24,7 @@ Generates a Bag of Words using a downloaded dataset
 If you want to use other dataset, change this function to parse your custom file or add a new
 function that generates the desired Bag of Words
 """
-function load_dataset() ::BagOfWords
+function load_raw_dataset() ::BagOfWords
 
     # Read CSV file containing the data and put it on a DataFrame for easy manipulation
     df = CSV.File(WORD_DATASET_PATH, delim = ",", header = 1) |> DataFrame
@@ -46,10 +46,26 @@ function load_dataset() ::BagOfWords
         push!(words, curr_word)
     end
 
-    # We only want the words that have certain length, specified in the global parameters file
-    first_bag = BagOfWords(words)
-    filtered_bag = only_words_with_given_length(first_bag)
-    return filtered_bag
+    return BagOfWords(words)
+end
+
+"""Generates a processed Bag of Words"""
+function load_clean_dataset() ::BagOfWords
+
+    # Start from the raw BagOfWords
+    bag = load_raw_dataset()
+
+    # Only consider words with appropriate length
+    filtered_bag = only_words_with_given_length(bag)
+
+    # Normalize the frequencies of the bag
+    normalized_filtered_bag = normalize_frequencies(filtered_bag)
+
+    # Choose only words with frequencies over certain threshold
+    common_words_bag = only_words_above_given_freq_threshold(normalized_filtered_bag)
+
+    # Normalize again and return
+    return normalize_frequencies(common_words_bag)
 end
 
 """
@@ -58,6 +74,15 @@ This length is specified in the global parameters
 """
 function only_words_with_given_length(bag::BagOfWords) ::BagOfWords
     new_words = filter(word -> length(word.content) == WORD_LEN, bag.words)
+    return BagOfWords(new_words)
+end
+
+"""
+Removes all the words whose frequency is below some threshold
+This threshold is specified in the global parameters
+"""
+function only_words_above_given_freq_threshold(bag::BagOfWords) ::BagOfWords
+    new_words = filter(word -> word.frequency >= FREQUENCY_THRESHOLD, bag.words)
     return BagOfWords(new_words)
 end
 
