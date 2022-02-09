@@ -78,20 +78,33 @@ function ==(first::GuessResult, second::GuessResult)
     return isequal(first, second)
 end
 
-# Unit testing this struct
-# ==================================================================================================
+function run_test_suite()
+    """Run all unit tests on this struct"""
 
-# Basic checks
-@test get_result("audio", "audil") == GuessResult([Good, Good, Good, Good, Bad])
-@test get_result("audio", "audio") == GuessResult([Good, Good, Good, Good, Good])
-@test get_result("audio", "axdxo") == GuessResult([Good, Bad, Good, Bad, Good])
+    println("==> RUNNING TESTS ON STRUCT GuessResult")
 
-# Letter that is in the word, but other word has ocuppied it (ie. it has associated good position)
-# should not appear as BadPosition
-@test get_result("audio", "audia") == GuessResult([Good, Good, Good, Good, Bad])
-@test get_result("audio", "audii") == GuessResult([Good, Good, Good, Good, Bad])
-@test get_result("audio", "audiu") == GuessResult([Good, Good, Good, Good, Bad])
+    # Basic checks
+    @test get_result("audio", "audil") == GuessResult([Good, Good, Good, Good, Bad])
+    @test get_result("audio", "audio") == GuessResult([Good, Good, Good, Good, Good])
+    @test get_result("audio", "axdxo") == GuessResult([Good, Bad, Good, Bad, Good])
+    @test get_result("barco", "audio") == GuessResult([BadPosition, Bad, Bad, Bad, Good])
 
-# Check that words with different lengths throw expected error
-@test_throws DimensionMismatch get_result("aaaaa", "aaaa")
-@test_throws DimensionMismatch get_result("aaaa", "aaaaaa")
+    # Letter that is in the word, but other word has ocuppied it (ie. it has associated good position)
+    # should not appear as BadPosition
+    @test get_result("audio", "audia") == GuessResult([Good, Good, Good, Good, Bad])
+    @test get_result("audio", "audii") == GuessResult([Good, Good, Good, Good, Bad])
+    @test get_result("audio", "audiu") == GuessResult([Good, Good, Good, Good, Bad])
+
+    # Check that words with different lengths throw expected error
+    @test_throws DimensionMismatch get_result("aaaaa", "aaaa")
+    @test_throws DimensionMismatch get_result("aaaa", "aaaaaa")
+
+    println("==> END RUNNING TESTS ON STRUCT GuessResult")
+    println("")
+
+end
+
+# If this file is called as main file, run the test suite
+if abspath(PROGRAM_FILE) == @__FILE__
+    run_test_suite()
+end
