@@ -1,8 +1,3 @@
-module GuessResultMod
-export ResultType, GuessResult
-
-using Test
-
 """Result of a certain guess on a certain position of the word"""
 @enum ResultType Good Bad BadPosition
 
@@ -81,7 +76,12 @@ function ==(first::GuessResult, second::GuessResult)
     return isequal(first, second)
 end
 
-function run_test_suite()
+# Unit Testing
+# ==================================================================================================
+
+using Test
+
+function unit_test_guess_result()
     """Run all unit tests on this struct"""
 
     println("==> RUNNING TESTS ON STRUCT GuessResult")
@@ -104,7 +104,5 @@ function run_test_suite()
 
     println("==> END RUNNING TESTS ON STRUCT GuessResult")
     println("")
-
-end
 
 end

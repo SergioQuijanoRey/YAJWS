@@ -1,11 +1,7 @@
-module BagOfWordsMod
-export Word, BagOfWords
-
 include("global_parameters.jl")
 
 using DataFrames
 using CSV
-using Test
 
 struct Word
     content::String
@@ -148,8 +144,9 @@ end
 
 # Unit testing
 # ==================================================================================================
+using Test
 
-function run_test_suite()
+function unit_test_bag_of_words()
     """Run all unit tests on this struct"""
 
     println("==> RUNNING TESTS ON STRUCT GuessResult")
@@ -161,9 +158,7 @@ function run_test_suite()
 end
 
 function normalized_frequencies_sum_up_one()
-    bag = load_dataset()
-    norm_bag = normalize_frequencies(bag)
-    @test get_sum_of_frequencies(norm_bag) ≈ 1.0 atol = 0.001
+    bag = load_clean_dataset()
+    @test get_sum_of_frequencies(bag) ≈ 1.0 atol = 0.001
 end
 
-end
