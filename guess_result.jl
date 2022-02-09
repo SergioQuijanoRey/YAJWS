@@ -55,6 +55,22 @@ function get_result(target_word::String, guessed_word::String) ::GuessResult
     return GuessResult(result_positions)
 end
 
+"""Prints the result the 'wordle way' """
+function pretty_print(result::GuessResult)
+    msg = ""
+    for curr in result.result
+        if result === Good
+            msg = msg * "🟩"
+        elseif result === Bad
+            msg = msg * "🟧"
+        else
+            msg = msg * "◼️"
+        end
+    end
+
+    println(msg)
+end
+
 # Overload == operator to run some tests
 import Base.==
 function isequal(first::GuessResult, second::GuessResult)
