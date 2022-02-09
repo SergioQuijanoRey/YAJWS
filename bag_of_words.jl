@@ -81,11 +81,37 @@ function normalize_frequencies(bag::BagOfWords) ::BagOfWords
     return BagOfWords(new_words)
 end
 
+"""Computes the entropy of the bag of words"""
+function entropy(bag::BagOfWords) ::Float64
+
+    # Get all the frequencies
+    frequencies = get_frequencies(bag)
+
+    # Compute the expression of the summands
+    f = prob -> big(prob) * log2(big(prob))
+    summands = f.(frequencies)
+
+    # Remove NaN values
+    # NaN values are associeated to freqs very close to 0 that are not that valuable
+    summands = filter(x -> isnan(x) == false, summands)
+
+    # Return the sum of the summands
+    return -sum(summands)
+end
+
+# Aux methods
+# ==================================================================================================
+
+"""Gets the list with all the frequencies of the words"""
+function get_frequencies(bag::BagOfWords) ::Vector{Float64}
+    return [word.frequency for word in bag.words]
+end
+
 """Computes the sum of all the frequencies in the bag"""
 function get_sum_of_frequencies(bag::BagOfWords) ::Float64
-    frequencies = [word.frequency for word in bag.words]
-    return sum(frequencies)
+    return sum(get_frequencies(bag))
 end
+
 
 # Overload some operators to make working with the struct more easy
 # ==================================================================================================
