@@ -6,7 +6,7 @@ include("bag_of_words.jl")
 # Global Parameters
 # ==================================================================================================
 function main()
-    result = get_result("audio", "adios")
+    result = GuessResultMod.get_result("audio", "adios")
     println(result)
 end
 

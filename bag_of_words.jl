@@ -1,3 +1,6 @@
+module BagOfWordsMod
+export Word, BagOfWords
+
 include("global_parameters.jl")
 
 using DataFrames
@@ -94,4 +97,6 @@ end
 
 if abspath(PROGRAM_FILE) == @__FILE__
     run_test_suite()
+end
+
 end

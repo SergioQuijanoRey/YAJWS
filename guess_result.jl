@@ -1,3 +1,6 @@
+module GuessResultMod
+export ResultType, GuessResult
+
 using Test
 
 """Result of a certain guess on a certain position of the word"""
@@ -107,4 +110,6 @@ end
 # If this file is called as main file, run the test suite
 if abspath(PROGRAM_FILE) == @__FILE__
     run_test_suite()
+end
+
 end
